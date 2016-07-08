@@ -29,6 +29,8 @@ public abstract class AbstractImportMojo extends AbstractCmsShellMojo {
 
     @Override
     protected void validate() throws MojoFailureException {
+        super.validate();
+
         if (files.isEmpty() && artifacts.isEmpty()) {
             throw new MojoFailureException("A file to import must be set");
         }

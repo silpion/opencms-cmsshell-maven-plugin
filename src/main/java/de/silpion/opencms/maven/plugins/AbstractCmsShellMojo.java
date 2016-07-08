@@ -116,6 +116,12 @@ public abstract class AbstractCmsShellMojo extends AbstractMojo {
         PrintStream err = isVerbose() ? System.err : new PrintStream(new ByteArrayOutputStream(1024));
         boolean interactive = false;
 
+        getLog().debug("Initialize CmsShell:");
+        getLog().debug("\twebInfPath: '" + getWebInfPath().getAbsolutePath() + "'");
+        getLog().debug("\tservletMapping: '" + getWebInfPath().getAbsolutePath() + "'");
+        getLog().debug("\tdefaultWebappName: '" + getWebInfPath().getAbsolutePath() + "'");
+        getLog().debug("\tadditional: '" + additional + "'");
+
         return new CmsShell(getWebInfPath().getAbsolutePath(), getServletMapping(), getDefaultWebappName(),
                 getPrompt(),
                 additional,
@@ -156,7 +162,13 @@ public abstract class AbstractCmsShellMojo extends AbstractMojo {
     protected abstract void executeShellCommand(CmsShell shell) throws MojoFailureException;
 
     protected void validate() throws MojoFailureException {
+        if (!webInfPath.exists()) {
+            throw new MojoFailureException("Directory doesn't exists: '" + webInfPath.getAbsolutePath() + "'");
+        }
 
+        if (!webInfPath.isDirectory()) {
+            throw new MojoFailureException("Must be a directory, not a file: '" + webInfPath.getAbsolutePath() + "'");
+        }
     }
 
     protected CmsObject getCms(CmsShell shell) {
