@@ -31,7 +31,7 @@ public class ImportResourcesMojo extends AbstractImportMojo {
         for (ResourceImport file : getFiles()) {
             getLog().info("Import '" + file.getImportFile() + "' into '" + file.getImportPath() + "'");
             shell.execute(CommandBuilder.of("importResources")
-                    .param(file.getImportFile().getAbsolutePath())
+                    .param(getAbsolutePath(file.getImportFile()))
                     .param(file.getImportPath())
                     .param(file.isKeepPermissions())
                     .get()
@@ -43,7 +43,7 @@ public class ImportResourcesMojo extends AbstractImportMojo {
 
             getLog().info("Import '" + artifact.getFile() + "' into '/'");
             shell.execute(CommandBuilder.of("importResources")
-                    .param(artifact.getFile().getAbsolutePath())
+                    .param(getAbsolutePath(artifact.getFile()))
                     .param(resource.getImportPath())
                     .param(resource.isKeepPermissions())
                     .get()

@@ -2,9 +2,11 @@ package de.silpion.opencms.maven.plugins;
 
 import de.silpion.opencms.maven.plugins.params.ResourceArtifact;
 import de.silpion.opencms.maven.plugins.params.ResourceImport;
+
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -13,26 +15,31 @@ import java.util.List;
  */
 public abstract class AbstractImportMojo extends AbstractCmsShellMojo {
 
-    @Parameter
-    private List<ResourceImport> files = Collections.emptyList();
+  @Parameter
+  private List<ResourceImport> files = Collections.emptyList();
 
-    @Parameter
-    private List<ResourceArtifact> artifacts = Collections.emptyList();
+  @Parameter
+  private List<ResourceArtifact> artifacts = Collections.emptyList();
 
-    protected List<ResourceImport> getFiles() {
-        return files;
+  protected List<ResourceImport> getFiles() {
+    return files;
+  }
+
+  protected List<ResourceArtifact> getArtifacts() {
+    return artifacts;
+  }
+
+  @Override
+  protected void validate() throws MojoFailureException {
+    if (files.isEmpty() && artifacts.isEmpty()) {
+      throw new MojoFailureException("A file to import must be set");
     }
 
-    protected List<ResourceArtifact> getArtifacts() {
-        return artifacts;
-    }
+    resolveResources(artifacts);
+  }
 
-    @Override
-    protected void validate() throws MojoFailureException {
-        if (files.isEmpty() && artifacts.isEmpty()) {
-            throw new MojoFailureException("A file to import must be set");
-        }
-
-        resolveResources(artifacts);
-    }
+  protected String getAbsolutePath(File file) {
+    String path = file.getAbsolutePath();
+    return path.replace('\\','/');
+  }
 }

@@ -34,7 +34,7 @@ public class ReplaceModuleMojo extends AbstractImportMojo {
                 getLog().info("Install '" + file.getImportFile());
                 shell.execute(CommandBuilder.of("replaceModule")
                         .param(getModuleName(file.getImportFile()))
-                        .param(file.getImportFile().getAbsolutePath())
+                        .param(getAbsolutePath(file.getImportFile()))
                         .get()
                 );
             }
@@ -45,7 +45,7 @@ public class ReplaceModuleMojo extends AbstractImportMojo {
                 getLog().info("Install '" + artifact.getFile());
                 shell.execute(CommandBuilder.of("replaceModule")
                         .param(getModuleName(artifact.getFile()))
-                        .param(artifact.getFile().getAbsolutePath())
+                        .param(getAbsolutePath(artifact.getFile()))
                         .get()
                 );
             }
@@ -55,7 +55,9 @@ public class ReplaceModuleMojo extends AbstractImportMojo {
     }
 
     private String getModuleName(File importFile) throws CmsConfigurationException {
-        CmsModule module = CmsModuleImportExportHandler.readModuleFromImport(importFile.getAbsolutePath());
+        CmsModule module = CmsModuleImportExportHandler.readModuleFromImport(getAbsolutePath(importFile));
         return module.getName();
     }
+
+
 }
