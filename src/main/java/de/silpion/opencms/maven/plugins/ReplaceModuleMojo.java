@@ -65,5 +65,4 @@ public class ReplaceModuleMojo extends AbstractImportMojo {
     return module.getName();
   }
 
-
 }
