@@ -55,6 +55,9 @@ public abstract class AbstractCmsShellMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project.remoteArtifactRepositories}", readonly = true, required = true)
     private List<ArtifactRepository> remoteRepos;
 
+    @Parameter(defaultValue = "false", property = "skipCmsShell")
+    private boolean skipCmsShell;
+
     @Component
     private RepositorySystem repositorySystem;
 
@@ -104,6 +107,10 @@ public abstract class AbstractCmsShellMojo extends AbstractMojo {
         return verbose;
     }
 
+    protected boolean isSkipCmsShell() {
+        return skipCmsShell;
+    }
+
     protected RepositorySystem getRepositorySystem() {
         return repositorySystem;
     }
@@ -132,6 +139,11 @@ public abstract class AbstractCmsShellMojo extends AbstractMojo {
 
     public final void execute() throws MojoExecutionException, MojoFailureException {
         System.setProperty("org.slf4j.simpleLogger.log.org.apache.solr", "error");
+
+        if (isSkipCmsShell()) {
+            getLog().info("Skipping");
+            return;
+        }
 
         validate();
 
