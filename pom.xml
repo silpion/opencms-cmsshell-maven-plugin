@@ -6,7 +6,7 @@
     <artifactId>cmsshell-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
 
-    <version>1.4.0-SNAPSHOT</version>
+    <version>1.5.0-SNAPSHOT</version>
 
     <name>CmsShell Maven Mojo</name>
 
@@ -71,6 +71,12 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-dependency-plugin</artifactId>
             <version>2.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.vaadin.addons</groupId>
+            <artifactId>filteringtable</artifactId>
+            <version>0.9.15.v7</version>
         </dependency>
 
         <!-- All we need for OpenCms -->
