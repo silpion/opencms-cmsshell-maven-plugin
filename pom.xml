@@ -21,6 +21,13 @@
         <version.org.opencms.opencms-core>10.5.1</version.org.opencms.opencms-core>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>unmirrored-0</id>
+            <url>http://maven.vaadin.com/vaadin-addons</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -79,14 +86,6 @@
                 <exclusion>
                     <groupId>com.vaadin</groupId>
                     <artifactId>vaadin-client-compiler</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.vaadin.addons</groupId>
-                    <artifactId>filteringtable</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.vaadin.addons</groupId>
-                    <artifactId>popupbutton</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
