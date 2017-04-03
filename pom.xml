@@ -80,6 +80,14 @@
                     <groupId>com.vaadin</groupId>
                     <artifactId>vaadin-client-compiler</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.vaadin.addons</groupId>
+                    <artifactId>filteringtable</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.vaadin.addons</groupId>
+                    <artifactId>popupbutton</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
