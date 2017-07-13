@@ -18,7 +18,7 @@
 
         <mavenVersion>3.3.9</mavenVersion>
 
-        <version.org.opencms.opencms-core>10.5.1</version.org.opencms.opencms-core>
+        <version.org.opencms.opencms-core>10.5.2</version.org.opencms.opencms-core>
     </properties>
 
     <repositories>
