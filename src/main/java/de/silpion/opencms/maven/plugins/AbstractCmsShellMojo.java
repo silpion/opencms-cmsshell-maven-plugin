@@ -2,6 +2,8 @@ package de.silpion.opencms.maven.plugins;
 
 import de.silpion.opencms.maven.plugins.params.CommandBuilder;
 import de.silpion.opencms.maven.plugins.params.ResourceArtifact;
+import de.silpion.opencms.maven.plugins.shell.SilpionCmsShell;
+import de.silpion.opencms.maven.plugins.shell.SilpionCmsShellParameters;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
@@ -28,33 +30,43 @@ import java.util.List;
  */
 public abstract class AbstractCmsShellMojo extends AbstractMojo {
 
+    @SuppressWarnings("unused")
     @Parameter(required = true, property = "cms.username")
     private String username;
 
+    @SuppressWarnings("unused")
     @Parameter(required = true, property = "cms.password")
     private String password;
 
+    @SuppressWarnings("unused")
     @Parameter(required = true, property = "cms.webInfPath")
     private File webInfPath;
 
+    @SuppressWarnings("unused")
     @Parameter(property = "cms.servletMapping", defaultValue = "opencms")
     private String servletMapping;
 
+    @SuppressWarnings("unused")
     @Parameter(property = "cms.defaultWebappName", defaultValue = "opencms")
     private String defaultWebappName;
 
+    @SuppressWarnings("unused")
     @Parameter(defaultValue = "${user}@${project}:${siteroot}|${uri}>")
     private String prompt;
 
-    @Parameter(defaultValue = "false")
+    @SuppressWarnings("unused")
+    @Parameter(defaultValue = "true")
     private boolean verbose;
 
+    @SuppressWarnings("unused")
     @Parameter(defaultValue = "${localRepository}", readonly = true, required = true)
     private ArtifactRepository localRepository;
 
+    @SuppressWarnings("unused")
     @Parameter(defaultValue = "${project.remoteArtifactRepositories}", readonly = true, required = true)
     private List<ArtifactRepository> remoteRepos;
 
+    @SuppressWarnings("unused")
     @Parameter(defaultValue = "false", property = "skipCmsShell")
     private boolean skipCmsShell;
 
@@ -129,7 +141,10 @@ public abstract class AbstractCmsShellMojo extends AbstractMojo {
         getLog().debug("\tdefaultWebappName: '" + getWebInfPath().getAbsolutePath() + "'");
         getLog().debug("\tadditional: '" + additional + "'");
 
-        return new CmsShell(getWebInfPath().getAbsolutePath(), getServletMapping(), getDefaultWebappName(),
+        // #26110 - CmsShell-maven-plugin / NPE
+        SilpionCmsShellParameters.init(out,err);
+
+        return new SilpionCmsShell(getWebInfPath().getAbsolutePath(), getServletMapping(), getDefaultWebappName(),
                 getPrompt(),
                 additional,
                 out, err,
