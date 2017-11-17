@@ -2,8 +2,10 @@ package de.silpion.opencms.maven.plugins;
 
 import de.silpion.opencms.maven.plugins.params.CommandBuilder;
 import de.silpion.opencms.maven.plugins.params.ResourceArtifact;
-import de.silpion.opencms.maven.plugins.shell.SilpionCmsShell;
-import de.silpion.opencms.maven.plugins.shell.SilpionCmsShellParameters;
+import de.silpion.opencms.maven.plugins.shell.CmsShell10_5_2;
+import de.silpion.opencms.maven.plugins.shell.CommandExecutionException;
+import de.silpion.opencms.maven.plugins.shell.I_CmsShell;
+import de.silpion.opencms.maven.plugins.shell.I_CmsShellCommands;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
@@ -14,14 +16,10 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.repository.RepositorySystem;
-import org.opencms.file.CmsObject;
-import org.opencms.main.CmsShell;
-import org.opencms.main.I_CmsShellCommands;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.List;
 
@@ -55,7 +53,7 @@ public abstract class AbstractCmsShellMojo extends AbstractMojo {
     private String prompt;
 
     @SuppressWarnings("unused")
-    @Parameter(defaultValue = "true")
+    @Parameter(defaultValue = "false")
     private boolean verbose;
 
     @SuppressWarnings("unused")
@@ -127,7 +125,7 @@ public abstract class AbstractCmsShellMojo extends AbstractMojo {
         return repositorySystem;
     }
 
-    protected CmsShell createCmsShell() {
+    protected I_CmsShell createCmsShell() {
         I_CmsShellCommands additional = null;
 
         // TODO detect e.printStackTrace(out); -> fail
@@ -141,10 +139,7 @@ public abstract class AbstractCmsShellMojo extends AbstractMojo {
         getLog().debug("\tdefaultWebappName: '" + getWebInfPath().getAbsolutePath() + "'");
         getLog().debug("\tadditional: '" + additional + "'");
 
-        // #26110 - CmsShell-maven-plugin / NPE
-        SilpionCmsShellParameters.init(out,err);
-
-        return new SilpionCmsShell(getWebInfPath().getAbsolutePath(), getServletMapping(), getDefaultWebappName(),
+        return new CmsShell10_5_2(getWebInfPath().getAbsolutePath(), getServletMapping(), getDefaultWebappName(),
                 getPrompt(),
                 additional,
                 out, err,
@@ -164,29 +159,30 @@ public abstract class AbstractCmsShellMojo extends AbstractMojo {
 
         getLog().info("Connecting " + getUsername() + "@************");
 
-        CmsShell shell = createCmsShell();
+        I_CmsShell shell = createCmsShell();
 
-        shell.execute(CommandBuilder.of("login")
-                .param(getUsername())
-                .param(getPassword()).get()
-        );
-
-        shell.execute(CommandBuilder.of("setCurrentProject")
-                .param("Offline")
-                .get()
-        );
-
-        shell.execute(CommandBuilder.of("setSiteRoot")
-                .param("/")
-                .get()
-        );
-
-        executeShellCommand(shell);
-
-        shell.exit();
+        try {
+            shell.execute(CommandBuilder.of("login")
+                    .param(getUsername())
+                    .param(getPassword()).get()
+            );
+            shell.execute(CommandBuilder.of("setCurrentProject")
+                    .param("Offline")
+                    .get()
+            );
+            shell.execute(CommandBuilder.of("setSiteRoot")
+                    .param("/")
+                    .get()
+            );
+            executeShellCommand(shell);
+        } catch (CommandExecutionException e) {
+            throw new MojoFailureException("Failed to execute command", e);
+        } finally {
+            shell.exit();
+        }
     }
 
-    protected abstract void executeShellCommand(CmsShell shell) throws MojoFailureException;
+    protected abstract void executeShellCommand(I_CmsShell shell) throws CommandExecutionException, MojoFailureException;
 
     protected void validate() throws MojoFailureException {
         if (!webInfPath.exists()) {
@@ -198,17 +194,7 @@ public abstract class AbstractCmsShellMojo extends AbstractMojo {
         }
     }
 
-    protected CmsObject getCms(CmsShell shell) {
-        try {
-            Field field = CmsShell.class.getDeclaredField("m_cms");
-            field.setAccessible(true);
-            return (CmsObject) field.get(shell);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    protected void publishProjectAndWait(CmsShell shell) {
+    protected void publishProjectAndWait(I_CmsShell shell) throws CommandExecutionException {
         shell.execute(CommandBuilder.of("publishProjectAndWait").get());
 
         // TODO to be verbose implement own command:
