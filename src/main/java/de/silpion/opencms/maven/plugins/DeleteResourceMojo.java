@@ -1,12 +1,11 @@
 package de.silpion.opencms.maven.plugins;
 
 import de.silpion.opencms.maven.plugins.params.CommandBuilder;
-import de.silpion.opencms.maven.plugins.shell.CommandExecutionException;
-import de.silpion.opencms.maven.plugins.shell.I_CmsShell;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.opencms.main.CmsShell;
 
 import java.util.List;
 
@@ -17,7 +16,6 @@ import java.util.List;
         defaultPhase = LifecyclePhase.INSTALL,
         requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME
 )
-@SuppressWarnings("unused")
 public class DeleteResourceMojo extends AbstractCmsShellMojo {
 
     @Parameter(required = true)
@@ -27,12 +25,12 @@ public class DeleteResourceMojo extends AbstractCmsShellMojo {
     private boolean publishAfter;
 
     @Override
-    protected void executeShellCommand(I_CmsShell shell) throws CommandExecutionException {
+    protected void executeShellCommand(CmsShell shell) {
 
         // TODO create a temp project
 
         for (String resourceName : resourceNames) {
-            if (!shell.getCms().existsResource(resourceName)) {
+            if (!getCms(shell).existsResource(resourceName)) {
                 getLog().info("Skip delete, '" + resourceName + "' doesn't exists!");
                 continue;
             }

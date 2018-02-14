@@ -6,7 +6,7 @@
     <artifactId>cmsshell-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
 
-    <version>1.7.0</version>
+    <version>9_5_2.0.0</version>
 
     <name>CmsShell Maven Mojo</name>
 
@@ -18,7 +18,8 @@
 
         <mavenVersion>3.3.9</mavenVersion>
 
-        <version.org.opencms.opencms-core>10.5.3</version.org.opencms.opencms-core>
+        <!--<version.org.opencms.opencms-core>9.5.2</version.org.opencms.opencms-core>-->
+        <version.org.opencms.opencms-core>9.5.2</version.org.opencms.opencms-core>
     </properties>
 
     <repositories>
@@ -94,12 +95,6 @@
                     <artifactId>vaadin-client-compiler</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.opencms</groupId>
-            <artifactId>org.opencms.workplace</artifactId>
-            <version>${version.org.opencms.opencms-core}</version>
         </dependency>
 
         <dependency>

@@ -3,29 +3,28 @@ package de.silpion.opencms.maven.plugins;
 import de.silpion.opencms.maven.plugins.params.CommandBuilder;
 import de.silpion.opencms.maven.plugins.params.ResourceArtifact;
 import de.silpion.opencms.maven.plugins.params.ResourceImport;
-import de.silpion.opencms.maven.plugins.shell.CommandExecutionException;
-import de.silpion.opencms.maven.plugins.shell.I_CmsShell;
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.opencms.main.CmsShell;
 
 /**
- * see CmsShellCommands10_5_2#importResources(java.lang.String, java.lang.String, boolean)
+ * see CmsShellCommands#importResources(java.lang.String, java.lang.String, boolean)
  */
 @Mojo(name = "importResources",
         defaultPhase = LifecyclePhase.INSTALL,
         requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME
 )
-@SuppressWarnings("unused")
 public class ImportResourcesMojo extends AbstractImportMojo {
 
     @Parameter(defaultValue = "true")
     private boolean publishAfter;
 
     @Override
-    protected void executeShellCommand(I_CmsShell shell) throws CommandExecutionException {
+    protected void executeShellCommand(CmsShell shell) throws MojoFailureException {
 
         // TODO create a temp project
 
@@ -54,5 +53,7 @@ public class ImportResourcesMojo extends AbstractImportMojo {
         if (publishAfter) {
             publishProjectAndWait(shell);
         }
+
     }
+
 }

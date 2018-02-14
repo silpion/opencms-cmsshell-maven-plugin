@@ -3,23 +3,20 @@ package de.silpion.opencms.maven.plugins;
 import de.silpion.opencms.maven.plugins.params.CommandBuilder;
 import de.silpion.opencms.maven.plugins.params.ResourceArtifact;
 import de.silpion.opencms.maven.plugins.params.ResourceImport;
-import de.silpion.opencms.maven.plugins.shell.CommandExecutionException;
-import de.silpion.opencms.maven.plugins.shell.I_CmsShell;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.opencms.configuration.CmsConfigurationException;
+import org.opencms.main.CmsShell;
 import org.opencms.module.CmsModule;
 import org.opencms.module.CmsModuleImportExportHandler;
-import org.opencms.module.CmsModuleImportExportRepository;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
- * If we need more sophisticated control over module import, we may use: {@link CmsModuleImportExportRepository}.
  * <p/>
  * see org.opencms.main.CmsShellCommands#replaceModule(java.lang.String, java.lang.String)
  */
@@ -27,11 +24,10 @@ import java.io.FileNotFoundException;
         defaultPhase = LifecyclePhase.INSTALL,
         requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME
 )
-@SuppressWarnings("unused")
 public class ReplaceModuleMojo extends AbstractImportMojo {
 
     @Override
-    protected void executeShellCommand(I_CmsShell shell) throws CommandExecutionException, MojoFailureException {
+    protected void executeShellCommand(CmsShell shell) throws MojoFailureException {
         try {
             for (ResourceImport file : getFiles()) {
                 getLog().info("Install '" + file.getImportFile());
@@ -58,8 +54,6 @@ public class ReplaceModuleMojo extends AbstractImportMojo {
             }
         } catch (CmsConfigurationException e) {
             throw new MojoFailureException("Failed to read module meta data", e);
-        } catch (CommandExecutionException e) {
-            throw new MojoFailureException("Failed to execute command(s)", e);
         }
     }
 

@@ -29,13 +29,13 @@ public abstract class AbstractImportMojo extends AbstractCmsShellMojo {
     return artifacts;
   }
 
-    @Override
-    protected void validate() throws MojoFailureException {
-        super.validate();
+  @Override
+  protected void validate() throws MojoFailureException {
+    super.validate();
 
-        if (files.isEmpty() && artifacts.isEmpty()) {
-            throw new MojoFailureException("A file to import must be set");
-        }
+    if (files.isEmpty() && artifacts.isEmpty()) {
+      throw new MojoFailureException("A file to import must be set");
+    }
 
     resolveResources(artifacts);
   }
