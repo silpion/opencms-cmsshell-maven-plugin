@@ -1,12 +1,12 @@
 Maven Wrapper Plugin für OpenCms-Shell
 ======================================
 
-Allgemeine Konfiguration
+Common Configuration
 ------------------------
 
     <plugin>
         <groupId>de.silpion.opencms.maven.plugins</groupId>
-        <artifactId>cmsshell-maven-plugin</artifactId>
+        <artifactId>opencms-cmsshell-maven-plugin</artifactId>
         <version>1.0</version>
         <configuration>
             <username>Admin</username>
@@ -43,7 +43,7 @@ Goals
                         </artifact>
                     </artifacts>
                     
-                    <!-- oder lokale Dateien -->
+                    <!-- or local files -->
                     <files>
                         <file>
                             <importFile>${project.xxx}/de.mnbn.opencms.content_0.1.zip</importFile>
@@ -81,4 +81,4 @@ Goals
 
 ### replaceModule
 
-analog _importResources_, aber ohne _publishAfter_
+like _importResources_, but without _publishAfter_

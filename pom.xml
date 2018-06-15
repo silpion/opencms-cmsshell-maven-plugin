@@ -3,12 +3,55 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.silpion.opencms.maven.plugins</groupId>
-    <artifactId>cmsshell-maven-plugin</artifactId>
+    <artifactId>opencms-cmsshell-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
 
-    <version>1.7.0</version>
+    <version>10_5_2.0.0</version>
 
-    <name>CmsShell Maven Mojo</name>
+    <name>OpenCms CmsShell Maven Plugin</name>
+    <description>Maven plugin to access OpenCms via OpenCmsShell.</description>
+    <url>https://www.silpion.de/</url>
+
+    <organization>
+        <name>SILPION IT-Solutions GmbH</name>
+        <url>https://www.silpion.de/</url>
+    </organization>
+
+    <scm>
+        <connection>scm:git:git://github.com/silpion/opencms-maven-plugin.git</connection>
+        <url>https://github.com/silpion/opencms-cmsshell-maven-plugin</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>brandt@silpion.de</id>
+            <name>Lars Brandt</name>
+            <email>brandt@silpion.de</email>
+            <organization>SILPION IT-Solutions GmbH</organization>
+            <organizationUrl>https://www.silpion.de/</organizationUrl>
+        </developer>
+        <developer>
+            <id>kucharczyk@silpion.de</id>
+            <name>Martin Kucharczyk</name>
+            <email>kucharczyk@silpion.de</email>
+            <organization>SILPION IT-Solutions GmbH</organization>
+            <organizationUrl>https://www.silpion.de/</organizationUrl>
+        </developer>
+        <developer>
+            <id>schrader@silpion.de</id>
+            <name>Stephan Schrader</name>
+            <email>schrader@silpion.de</email>
+            <organization>SILPION IT-Solutions GmbH</organization>
+            <organizationUrl>https://www.silpion.de/</organizationUrl>
+        </developer>
+        <developer>
+            <id>wussmann@silpion.de</id>
+            <name>Kenneth Wußmann</name>
+            <email>wussmann@silpion.de</email>
+            <organization>SILPION IT-Solutions GmbH</organization>
+            <organizationUrl>https://www.silpion.de/</organizationUrl>
+        </developer>
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -122,36 +165,194 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>2.4</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.6</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>3.2</version>
+                    <executions>
+                        <execution>
+                            <id>mojo-descriptor</id>
+                            <goals>
+                                <goal>descriptor</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>help-goal</id>
+                            <goals>
+                                <goal>helpmojo</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+
+            <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/license-maven-plugin -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>1.16</version>
+                <configuration>
+                    <failOnMissingHeader>true</failOnMissingHeader>
+                    <dryRun>false</dryRun>
+                    <licenseName>lgpl_v3</licenseName>
+                    <inceptionYear>2017</inceptionYear>
+                    <organizationName>Silpion IT-Solutions GmbH (https://www.silpion.de/)</organizationName>
+                    <roots>
+                        <root>${project.build.sourceDirectory}</root>
+                        <root>${project.build.testSourceDirectory}</root>
+                    </roots>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>check-file-header</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>check-file-header</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <reporting>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.2</version>
-                <executions>
-                    <execution>
-                        <id>mojo-descriptor</id>
-                        <goals>
-                            <goal>descriptor</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <version>3.4</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.7</version>
                 <configuration>
-                    <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+                    <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
                 </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>dependencies</report>
+                            <report>project-team</report>
+                            <report>license</report>
+                            <report>plugin-management</report>
+                            <report>plugins</report>
+                            <report>summary</report>
+                            <report>dependency-info</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
         </plugins>
-    </build>
+    </reporting>
+
+    <profiles>
+        <profile>
+            <id>deploy</id>
+            <activation>
+                <property>
+                    <name>!develop</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <!-- https://mvnrepository.com/artifact/org.sonatype.plugins/nexus-staging-maven-plugin -->
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.8</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+
+                    <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-gpg-plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-javadoc-plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <doclint>none</doclint>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-source-plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <distributionManagement>
-        <repository>
-            <id>silpion-artifactory-plugin-releases</id>
-            <name>Silpion Releases</name>
-            <url>http://artifactory.office.silpion.de/artifactory/plugins-release-local</url>
-        </repository>
         <snapshotRepository>
-            <id>silpion-artifactory-plugin-snapshots</id>
-            <name>Silpion Snapshots</name>
-            <url>http://artifactory.office.silpion.de/artifactory/plugins-snapshot-local</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 </project>
