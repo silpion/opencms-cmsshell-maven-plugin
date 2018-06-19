@@ -22,6 +22,7 @@ package de.silpion.opencms.maven.plugins.shell;
  * #L%
  */
 
+import org.apache.maven.plugin.MojoFailureException;
 import org.opencms.configuration.CmsParameterConfiguration;
 import org.opencms.db.CmsUserSettings;
 import org.opencms.file.CmsObject;
@@ -438,7 +439,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
             String prompt,
             I_CmsShellCommands additionalShellCommands,
             PrintStream out,
-            PrintStream err) {
+            PrintStream err) throws MojoFailureException {
 
         this.m_out = out;
         this.m_err = err;
@@ -453,7 +454,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
             // initialize the shell
             initShell(additionalShellCommands, out, err);
         } catch (Throwable t) {
-            t.printStackTrace(m_err);
+            throw new MojoFailureException("Error execute CmsShell", t);
         }
     }
 
@@ -471,7 +472,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
             String servletMapping,
             String defaultWebAppName,
             String prompt,
-            I_CmsShellCommands additionalShellCommands) {
+            I_CmsShellCommands additionalShellCommands) throws MojoFailureException {
 
         this(
                 webInfPath,
@@ -504,7 +505,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
             I_CmsShellCommands additionalShellCommands,
             PrintStream out,
             PrintStream err,
-            boolean interactive) {
+            boolean interactive) throws MojoFailureException {
 
         this.m_out = out;
         this.m_err = err;
@@ -563,7 +564,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
             // initialize the shell
             initShell(additionalShellCommands, out, err);
         } catch (Throwable t) {
-            t.printStackTrace(err);
+            throw new MojoFailureException("Error execute CmsShell", t);
         }
     }
 

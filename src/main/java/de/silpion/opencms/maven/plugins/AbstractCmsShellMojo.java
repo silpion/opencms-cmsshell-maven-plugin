@@ -147,7 +147,7 @@ public abstract class AbstractCmsShellMojo extends AbstractMojo {
         return repositorySystem;
     }
 
-    protected I_CmsShell createCmsShell() {
+    protected I_CmsShell createCmsShell() throws MojoFailureException {
         I_CmsShellCommands additional = null;
 
         // TODO detect e.printStackTrace(out); -> fail
