@@ -10,12 +10,12 @@ package de.silpion.opencms.maven.plugins.shell;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
@@ -59,13 +59,13 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Eine angepasste Kopie der CmsShell aus OpenCmsCore 10.5.2
+ * Eine angepasste Kopie der CmsShell aus OpenCmsCore 10.0.1
  * Die Änderungen beziehen sich im Wesentlichen auf das Exceptionhandling
  * und dem Bug der NPE wenn die OpenCMs Configuration geladen wird und dabei eine Exception wirft
  * Das kann bei einem Syntaxfehler passieren oder wenn dort angegebene Klassen nicht instanziiert werden können
  * weil z.B. das entsprechende .jar fehlt
  */
-public class CmsShell10_5_2 implements I_CmsShell {
+public class CmsShell10_0_1 implements I_CmsShell {
 
     /**
      * Command object class.<p>
@@ -426,7 +426,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
     private boolean m_interactive;
 
     /**
-     * Creates a new <p>
+     * Creates a new CmsShell.<p>
      *
      * @param cms                     the user context to run the shell from
      * @param prompt                  the prompt format to set
@@ -434,7 +434,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
      * @param out                     stream to write the regular output messages to
      * @param err                     stream to write the error messages output to
      */
-    public CmsShell10_5_2(
+    public CmsShell10_0_1(
             CmsObject cms,
             String prompt,
             I_CmsShellCommands additionalShellCommands,
@@ -443,6 +443,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
 
         this.m_out = out;
         this.m_err = err;
+
         setPrompt(prompt);
         try {
             // has to be initialized already if this constructor is used
@@ -454,6 +455,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
             // initialize the shell
             initShell(additionalShellCommands, out, err);
         } catch (Throwable t) {
+            t.printStackTrace(m_err);
             throw new MojoFailureException("Error execute CmsShell", t);
         }
     }
@@ -467,7 +469,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
      * @param prompt                  the prompt format to set
      * @param additionalShellCommands optional object for additional shell commands, or null
      */
-    public CmsShell10_5_2(
+    public CmsShell10_0_1(
             String webInfPath,
             String servletMapping,
             String defaultWebAppName,
@@ -486,7 +488,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
     }
 
     /**
-     * Creates a new <p>
+     * Creates a new CmsShell.<p>
      *
      * @param webInfPath              the path to the 'WEB-INF' folder of the OpenCms installation
      * @param servletMapping          the mapping of the servlet (or <code>null</code> to use the default <code>"/opencms/*"</code>)
@@ -497,7 +499,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
      * @param err                     stream to write the error messages output to
      * @param interactive             if <code>true</code> this is an interactive session with a user sitting on a console
      */
-    public CmsShell10_5_2(
+    public CmsShell10_0_1(
             String webInfPath,
             String servletMapping,
             String defaultWebAppName,
@@ -512,6 +514,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
 
         setPrompt(prompt);
         setInteractive(interactive);
+
         if (CmsStringUtil.isEmpty(servletMapping)) {
             servletMapping = "/opencms/*";
         }
@@ -540,6 +543,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
                     return;
                 }
             }
+
             out.println(Messages.get().getBundle(locale).key(Messages.GUI_SHELL_WEB_INF_PATH_1, webInfPath));
             // set the path to the WEB-INF folder (the 2nd and 3rd parameters are just reasonable dummies)
             CmsServletContainerSettingsWrapper settings = CmsServletContainerSettingsWrapper.createInstance(
@@ -548,6 +552,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
                     servletMapping,
                     null,
                     null);
+
             m_opencms.getSystemInfo().init(settings.getInstance());
             // now read the configuration properties
             String propertyPath = m_opencms.getSystemInfo().getConfigurationFileRfsPath();
@@ -564,6 +569,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
             // initialize the shell
             initShell(additionalShellCommands, out, err);
         } catch (Throwable t) {
+            t.printStackTrace(err);
             throw new MojoFailureException("Error execute CmsShell", t);
         }
     }
@@ -574,7 +580,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
 
     /**
      * Executes the commands from the given input stream in this shell.<p>
-     * <p>
+     *
      * <ul>
      * <li>Commands in the must be separated with a line break '\n'.
      * <li>Only one command per line is allowed.
@@ -584,12 +590,13 @@ public class CmsShell10_5_2 implements I_CmsShell {
      * @param inputStream the input stream from which the commands are read
      */
     public void execute(InputStream inputStream) throws CommandExecutionException {
+
         execute(new InputStreamReader(inputStream));
     }
 
     /**
      * Executes the commands from the given reader in this shell.<p>
-     * <p>
+     *
      * <ul>
      * <li>Commands in the must be separated with a line break '\n'.
      * <li>Only one command per line is allowed.
@@ -626,7 +633,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
                 // If a escape sequence is detected, OpenCms prints a warning message
                 if (line.indexOf(KeyEvent.VK_ESCAPE) != -1) {
                     m_out.println(
-                            m_messages.key(Messages.GUI_SHELL_ESCAPE_SEQUENCES_NOT_SUPPORTED_0));
+                            m_messages.key("GUI_SHELL_ESCAPE_SEQUENCES_NOT_SUPPORTED_0"));
                     continue;
                 }
                 StringReader lineReader = new StringReader(line);
@@ -673,7 +680,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
 
     /**
      * Executes the commands from the given string in this shell.<p>
-     * <p>
+     *
      * <ul>
      * <li>Commands in the must be separated with a line break '\n'.
      * <li>Only one command per line is allowed.
@@ -683,6 +690,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
      * @param commands the string from which the commands are read
      */
     public void execute(String commands) throws CommandExecutionException {
+
         execute(new StringReader(commands));
     }
 
@@ -769,7 +777,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
     }
 
     /**
-     * Initializes the <p>
+     * Initializes the CmsShell.<p>
      *
      * @param additionalShellCommands optional object for additional shell commands, or null
      * @param out                     stream to write the regular output messages to
@@ -785,7 +793,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
         m_settings = initSettings();
 
         // initialize shell command object
-        m_shellCommands = new CmsShellCommands10_5_2();
+        m_shellCommands = new CmsShellCommands10_0_1();
         m_shellCommands.initShellCmsObject(m_cms, this);
 
         // initialize additional shell command object
@@ -802,7 +810,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
             // get all shell callable methods from the additional shell command object
             m_commandObjects.add(new CmsCommandObject(m_additionalShellCommands));
         }
-        // get all shell callable methods from the CmsShellCommands10_5_2
+        // get all shell callable methods from the CmsShellCommands
         m_commandObjects.add(new CmsCommandObject(m_shellCommands));
         // get all shell callable methods from the CmsRequestContext
         m_commandObjects.add(new CmsCommandObject(m_cms.getRequestContext()));
@@ -902,7 +910,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
         boolean foundSomething = false;
         m_out.println();
 
-        Iterator<CmsCommandObject> i = m_commandObjects.iterator();
+        Iterator<CmsShell10_0_1.CmsCommandObject> i = m_commandObjects.iterator();
         while (i.hasNext()) {
             CmsCommandObject cmdObj = i.next();
             commandList = cmdObj.getMethodHelp(searchString);
@@ -947,10 +955,16 @@ public class CmsShell10_5_2 implements I_CmsShell {
     }
 
     /**
+     * Executes all commands read from the given reader.<p>
+     *
+     * @param reader a Reader from which the commands are read
+     */
+
+    /**
      * Sets the current shell prompt.<p>
      * <p>
      * To set the prompt, the following variables are available:<p>
-     * <p>
+     *
      * <code>$u</code> the current user name<br>
      * <code>$s</code> the current site root<br>
      * <code>$p</code> the current project name<p>
@@ -984,7 +998,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
             m_out.println();
         }
 
-        // prepare to lookup a method in CmsObject or CmsShellCommands10_5_2
+        // prepare to lookup a method in CmsObject or CmsShellCommands
         boolean executed = false;
         Iterator<CmsCommandObject> i = m_commandObjects.iterator();
         while (!executed && i.hasNext()) {
@@ -1006,8 +1020,7 @@ public class CmsShell10_5_2 implements I_CmsShell {
 
             m_out.println(m_messages.key(Messages.GUI_SHELL_METHOD_NOT_FOUND_1, commandMsg.toString()));
             m_out.println(m_messages.key(Messages.GUI_SHELL_HR_0));
-            ((CmsShellCommands10_5_2) m_shellCommands).help();
+            ((CmsShellCommands10_0_1) m_shellCommands).help();
         }
     }
-
 }

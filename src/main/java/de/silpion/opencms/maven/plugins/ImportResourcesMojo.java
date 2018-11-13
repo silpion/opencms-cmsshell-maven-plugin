@@ -34,7 +34,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
 /**
- * see CmsShellCommands10_5_2#importResources(java.lang.String, java.lang.String, boolean)
+ * see CmsShellCommands10_0_1#importResources(java.lang.String, java.lang.String, boolean)
  */
 @Mojo(name = "importResources",
         defaultPhase = LifecyclePhase.INSTALL,

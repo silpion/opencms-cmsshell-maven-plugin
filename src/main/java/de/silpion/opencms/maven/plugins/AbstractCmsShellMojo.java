@@ -24,7 +24,7 @@ package de.silpion.opencms.maven.plugins;
 
 import de.silpion.opencms.maven.plugins.params.CommandBuilder;
 import de.silpion.opencms.maven.plugins.params.ResourceArtifact;
-import de.silpion.opencms.maven.plugins.shell.CmsShell10_5_2;
+import de.silpion.opencms.maven.plugins.shell.CmsShell10_0_1;
 import de.silpion.opencms.maven.plugins.shell.CommandExecutionException;
 import de.silpion.opencms.maven.plugins.shell.I_CmsShell;
 import de.silpion.opencms.maven.plugins.shell.I_CmsShellCommands;
@@ -161,7 +161,7 @@ public abstract class AbstractCmsShellMojo extends AbstractMojo {
         getLog().debug("\tdefaultWebappName: '" + getWebInfPath().getAbsolutePath() + "'");
         getLog().debug("\tadditional: '" + additional + "'");
 
-        return new CmsShell10_5_2(getWebInfPath().getAbsolutePath(), getServletMapping(), getDefaultWebappName(),
+        return new CmsShell10_0_1(getWebInfPath().getAbsolutePath(), getServletMapping(), getDefaultWebappName(),
                 getPrompt(),
                 additional,
                 out, err,
