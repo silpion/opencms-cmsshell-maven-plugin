@@ -238,11 +238,17 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>check-file-header</id>
-                        <phase>process-sources</phase>
+                        <id>update-project-license</id>
                         <goals>
-                            <goal>check-file-header</goal>
+                            <goal>update-project-license</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <id>update-file-header</id>
+                        <goals>
+                            <goal>update-file-header</goal>
+                        </goals>
+                        <phase>process-sources</phase>
                     </execution>
                 </executions>
             </plugin>
